@@ -148,23 +148,54 @@ button{font:inherit;border:none;background:none;color:inherit;cursor:pointer;}
 .nav-item.active{color:var(--green);}
 .nav-item.active .ni{transform:translateY(-3px) scale(1.1);}
 
-/* CHATBOT */
-.chat-btn{position:fixed;bottom:90px;right:18px;z-index:60;width:56px;height:56px;border-radius:50%;
-  background:linear-gradient(135deg,var(--green),var(--green2));color:#031;font-size:24px;display:grid;place-items:center;
-  box-shadow:0 8px 25px rgba(57,237,130,.4);transition:.2s;}
-.chat-btn:active{transform:scale(.9);}
-.chat-panel{position:fixed;bottom:160px;right:18px;z-index:60;width:320px;max-width:calc(100vw - 36px);height:420px;
-  background:#0f141f;border:1px solid var(--border);border-radius:20px;display:none;flex-direction:column;overflow:hidden;
-  box-shadow:0 20px 50px rgba(0,0,0,.5);}
-.chat-panel.open{display:flex;}
-.chat-header{padding:14px 16px;background:rgba(57,237,130,.1);border-bottom:1px solid var(--border);font-weight:800;font-size:14px;display:flex;justify-content:space-between;align-items:center;}
-.chat-messages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
-.msg{max-width:85%;padding:10px 13px;border-radius:14px;font-size:13px;line-height:1.45;}
-.msg.bot{background:rgba(255,255,255,.07);align-self:flex-start;border-bottom-left-radius:4px;}
-.msg.user{background:linear-gradient(135deg,var(--green),var(--green2));color:#031;align-self:flex-end;border-bottom-right-radius:4px;}
-.chat-input{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border);}
-.chat-input input{flex:1;height:42px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.05);color:#fff;padding:0 14px;outline:none;font-size:13px;}
-.chat-input button{width:42px;height:42px;border-radius:12px;background:var(--green);color:#031;font-size:18px;display:grid;place-items:center;}
+/* ========== CHATBOT (Real Gemini via Cloudflare Worker) ========== */
+const WORKER_URL = "https://apkhub-chat.zorayzahmed49.workers.dev";
+
+function toggleChat(){
+  document.getElementById('chatPanel').classList.toggle('open');
+}
+
+function addMsg(text, type){
+  const div = document.createElement('div');
+  div.className = 'msg ' + type;
+  div.innerHTML = text;
+  document.getElementById('chatMessages').appendChild(div);
+  document.getElementById('chatMessages').scrollTop = 99999;
+}
+
+async function sendChat(){
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if(!text) return;
+
+  addMsg(text, 'user');
+  input.value = '';
+  addMsg("Thinking...", 'bot');   // temporary
+
+  try {
+    const res = await fetch(WORKER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text })
+    });
+
+    const data = await res.json();
+    
+    // Remove "Thinking..." message
+    const messages = document.getElementById('chatMessages');
+    messages.removeChild(messages.lastChild);
+
+    if(data.reply){
+      addMsg(data.reply, 'bot');
+    } else {
+      addMsg("Error: " + (data.error || "Kuch problem aa gayi"), 'bot');
+    }
+  } catch (err) {
+    const messages = document.getElementById('chatMessages');
+    messages.removeChild(messages.lastChild);
+    addMsg("Network error. Internet check karo.", 'bot');
+  }
+}
 
 @media(min-width:600px){.grid,.cat-grid{grid-template-columns:repeat(3,1fr);}}
 </style>
