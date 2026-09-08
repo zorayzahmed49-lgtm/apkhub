@@ -2,8 +2,12 @@ name: Build APK
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master, main ]
   workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
 
 jobs:
   build:
@@ -29,3 +33,4 @@ jobs:
         with:
           name: apkhub-app
           path: app/build/outputs/apk/debug/*.apk
+          retention-days: 7
