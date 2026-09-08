@@ -176,7 +176,7 @@ const APPS=[
 {name:"InShot",ver:"v2.222.1548 (Pro)",desc:"Video & photo editor",cat:"video",icon:"✂️",cls:"i-orange",badge:"PRO",link:"https://vplink.in/PSWRyG"},
 {name:"Koloro",ver:"v6.2.8 (VIP)",desc:"Photo editor",cat:"photo",icon:"🎨",cls:"i-pink",badge:"VIP",link:"https://vplink.in/69FQ"},
 {name:"MeloShort",ver:"2.42.00 (Premium)",desc:"Short dramas",cat:"video",icon:"📱",cls:"i-purple",badge:"PREMIUM",link:"https://vplink.in/d9BXu"},
-{name:"LOKTV",ver:"Latest",desc:"LOKTV streaming",cat:"video",icon:"📺",cls:"i-cyan",badge:"",link:"https://vplink.in/iWGd2"},
+{name:"LOKTV",ver:"v1.1.0 (VIP)",desc:"LOKTV streaming",cat:"video",icon:"📺",cls:"i-cyan",badge:"VIP",link:"https://vplink.in/iWGd2"},
 {name:"MOVIES HUB",ver:"v2.1.5d (Premium)",desc:"Movies hub",cat:"video",icon:"🎬",cls:"i-red",badge:"PREMIUM",link:"https://vplink.in/TJMVw"},
 {name:"Prime Video",ver:"v3.0.465.755 MOD",desc:"Prime Video mod",cat:"video",icon:"📺",cls:"i-blue",badge:"MOD",link:"https://vplink.in/1HLBB"},
 {name:"Hulu",ver:"v6.11.0.63 (Premium)",desc:"Hulu mod",cat:"video",icon:"📡",cls:"i-green",badge:"PREMIUM",link:"https://vplink.in/4rsj"},
@@ -204,9 +204,15 @@ const APPS=[
 {name:"ChatGPT",ver:"v1.2025.329 (Premium)",desc:"ChatGPT app",cat:"tools",icon:"💬",cls:"i-green",badge:"PREMIUM",link:"https://vplink.in/WkRJK"},
 {name:"CapCut",ver:"v19.6.1 MOD",desc:"Video editor",cat:"video",icon:"🎥",cls:"i-pink",badge:"MOD",link:"https://vplink.in/w6IiPR"},
 {name:"Alight Motion",ver:"v5.0.279 (Premium)",desc:"Motion graphics",cat:"video",icon:"✨",cls:"i-purple",badge:"PREMIUM",link:"https://vplink.in/bmOYo5"},
-{name:"CapCut",ver:"v18.6.0 (Pro)",desc:"CapCut Pro",cat:"video",icon:"✂️",cls:"i-pink",badge:"PRO",link:"https://vplink.in/OHDG60"}
+{name:"CapCut",ver:"v18.6.0 (Pro)",desc:"CapCut Pro",cat:"video",icon:"✂️",cls:"i-pink",badge:"PRO",link:"https://vplink.in/OHDG60"},
+{name:"YouTube Premium",ver:"v21.33.326 (Premium)",desc:"YouTube Premium",cat:"video",icon:"▶️",cls:"i-red",badge:"PREMIUM",link:"https://vplink.in/u2i0s"},
+{name:"VPN India",ver:"v1.162 (Pro)",desc:"VPN app",cat:"tools",icon:"🔒",cls:"i-blue",badge:"PRO",link:"https://vplink.in/LUxT"},
+{name:"TikTok Platinum",ver:"v46.7.5 (MOD)",desc:"TikTok mod",cat:"social",icon:"🎵",cls:"i-pink",badge:"MOD",link:"https://vplink.in/eWam"},
+{name:"Red Dead Redemption",ver:"v1.58.63226194 MOD",desc:"RDR mod",cat:"games",icon:"🤠",cls:"i-orange",badge:"MOD",link:"https://vplink.in/M4S6ty"},
+{name:"microG Services",ver:"v0.3.1.4.240913",desc:"microG services",cat:"tools",icon:"⚙️",cls:"i-cyan",badge:"",link:"https://vplink.in/xdaUMm"},
+{name:"WEBTOON",ver:"v3.9.11 (Premium)",desc:"Webtoons reader",cat:"tools",icon:"📖",cls:"i-green",badge:"PREMIUM",link:"https://vplink.in/dvy7"}
 ];
-const CATS=[{key:"games",icon:"🎮",name:"Games"},{key:"video",icon:"🎬",name:"Video"},{key:"tools",icon:"🛠",name:"Tools"},{key:"music",icon:"🎵",name:"Music"},{key:"photo",icon:"📷",name:"Photo"}];
+const CATS=[{key:"games",icon:"🎮",name:"Games"},{key:"video",icon:"🎬",name:"Video"},{key:"tools",icon:"🛠",name:"Tools"},{key:"music",icon:"🎵",name:"Music"},{key:"photo",icon:"📷",name:"Photo"},{key:"social",icon:"📱",name:"Social"}];
 function getRating(name){return parseInt(localStorage.getItem('rate_'+name)||0);}
 function setRating(name,stars){localStorage.setItem('rate_'+name,stars);renderApps();renderGames();}
 function ratingHTML(name){const r=getRating(name);let h='<div class="user-rating">';for(let i=1;i<=5;i++)h+=`<span class="${i<=r?'active':''}" onclick="setRating('${name}',${i})">★</span>`;return h+'</div>';}
@@ -214,7 +220,7 @@ function cardHTML(a){return `<div class="card">${a.badge?`<span class="c-badge">
 document.getElementById('trendScroll').innerHTML=APPS.slice(0,6).map(a=>`<div class="trend-card"><div class="ti ${a.cls}">${a.icon}</div><div class="tn">${a.name}</div><div class="tr">${a.ver.split(' ')[0]}</div></div>`).join('');
 function onHomeSearch(v){if(v.trim()){go('apps');document.getElementById('appsSearch').value=v;renderApps();}}
 let appsFilter='all';
-const appChipDefs=[['all','✨ All'],['games','🎮 Games'],['video','🎬 Video'],['tools','🛠 Tools'],['music','🎵 Music'],['photo','📷 Photo']];
+const appChipDefs=[['all','✨ All'],['games','🎮 Games'],['video','🎬 Video'],['tools','🛠 Tools'],['music','🎵 Music'],['photo','📷 Photo'],['social','📱 Social']];
 document.getElementById('appsChips').innerHTML=appChipDefs.map(([k,l])=>`<button class="chip ${k==='all'?'active':''}" data-k="${k}" onclick="setAppsFilter('${k}')">${l}</button>`).join('');
 function setAppsFilter(k){appsFilter=k;document.querySelectorAll('#appsChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.k===k));renderApps();}
 function renderApps(){const q=(document.getElementById('appsSearch').value||'').toLowerCase();const list=APPS.filter(a=>(appsFilter==='all'||a.cat===appsFilter)&&(a.name.toLowerCase().includes(q)||a.ver.toLowerCase().includes(q)));document.getElementById('appsGrid').innerHTML=list.map(cardHTML).join('');document.getElementById('appsNoRes').style.display=list.length?'none':'block';}
