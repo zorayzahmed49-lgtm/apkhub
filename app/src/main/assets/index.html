@@ -1,1 +1,302 @@
-PLACEHOLDER
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>APK Hub</title>
+<style>
+:root{--bg:#06080d;--card:rgba(20,26,38,.9);--border:rgba(255,255,255,.09);--text:#f5f7fb;--muted:#8994a6;--green:#39ed82;--green2:#14c463;--blue:#5d8dff;--purple:#a66cff;--orange:#ff9c4a;--pink:#ff5ea3;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);position:relative;}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(circle at 15% 10%,rgba(57,237,130,.16),transparent 30%),radial-gradient(circle at 90% 15%,rgba(93,141,255,.14),transparent 32%),radial-gradient(circle at 50% 100%,rgba(166,108,255,.12),transparent 35%);}
+a{color:inherit;text-decoration:none;}button{font:inherit;border:none;background:none;color:inherit;cursor:pointer;}
+.intro{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 30% 20%,rgba(57,237,130,.2),transparent 40%),radial-gradient(circle at 75% 75%,rgba(93,141,255,.18),transparent 40%),#05070c;transition:opacity .6s ease,visibility .6s ease;}
+.intro.hide{opacity:0;visibility:hidden;pointer-events:none;}
+.intro-logo{display:flex;align-items:center;gap:14px;font-size:56px;font-weight:900;letter-spacing:-3px;opacity:0;transform:scale(.7);animation:pop .8s .3s cubic-bezier(.2,.8,.2,1) forwards;}
+@keyframes pop{70%{transform:scale(1.08)}to{opacity:1;transform:scale(1)}}
+.intro-icon{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;font-size:32px;background:linear-gradient(135deg,var(--green),var(--green2));color:#031;box-shadow:0 0 40px rgba(57,237,130,.4);}
+.intro-logo span{color:var(--green);}
+.intro-tag{position:absolute;bottom:80px;left:0;right:0;text-align:center;color:#93a0b3;font-size:11px;font-weight:800;letter-spacing:4px;opacity:0;animation:fadeUp .8s 1s ease forwards;}
+@keyframes fadeUp{to{opacity:1;}}
+.shell{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;}
+.topbar{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:16px 18px 10px;}
+.brand{display:flex;align-items:center;gap:9px;font-size:19px;font-weight:900;}
+.brand-icon{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;font-size:15px;font-weight:900;background:linear-gradient(135deg,var(--green),var(--green2));color:#031;}
+.brand span{color:var(--green);}
+.icon-btn{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid var(--border);display:grid;place-items:center;font-size:16px;}
+.pages{flex:1;position:relative;overflow:hidden;}
+.page{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:6px 18px 100px;opacity:0;transform:translateY(14px);pointer-events:none;transition:opacity .32s ease,transform .32s ease;}
+.page.active{opacity:1;transform:none;pointer-events:auto;}
+.badge{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:30px;background:rgba(57,237,130,.09);border:1px solid rgba(57,237,130,.22);color:var(--green);font-size:11px;font-weight:800;margin:6px 0 16px;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 1.6s infinite;}
+@keyframes pulse{50%{opacity:.3;transform:scale(.6);}}
+.hero-title{font-size:34px;font-weight:900;line-height:1.05;letter-spacing:-1.3px;margin-bottom:10px;}
+.grad{background:linear-gradient(90deg,var(--green),#8affb8,var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.hero-sub{color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:18px;max-width:420px;}
+.search{position:relative;margin-bottom:22px;}
+.search input{width:100%;height:52px;padding:0 18px 0 46px;border-radius:15px;border:1px solid var(--border);background:rgba(18,24,34,.9);color:#fff;outline:none;font-size:14px;}
+.search .ic{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:#6c7889;font-size:17px;}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:26px;}
+.stat{padding:16px 8px;text-align:center;border-radius:14px;border:1px solid var(--border);background:rgba(16,22,32,.7);}
+.stat b{display:block;font-size:19px;}.stat span{color:var(--muted);font-size:10px;}
+.sec-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.sec-head h3{font-size:17px;font-weight:800;}.sec-head a{color:var(--green);font-size:11px;font-weight:800;}
+.trend-scroll{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;margin-bottom:28px;scrollbar-width:none;}
+.trend-scroll::-webkit-scrollbar{display:none;}
+.trend-card{flex:0 0 150px;padding:14px;border-radius:16px;border:1px solid var(--border);background:var(--card);}
+.trend-card .ti{width:48px;height:48px;border-radius:13px;display:grid;place-items:center;font-size:22px;margin-bottom:10px;background:linear-gradient(135deg,#283442,#151c26);}
+.trend-card .tn{font-size:13px;font-weight:800;margin-bottom:2px;}.trend-card .tr{color:#ffc857;font-size:10px;}
+.chip-row{display:flex;gap:8px;overflow-x:auto;margin-bottom:28px;scrollbar-width:none;}
+.chip{flex:0 0 auto;padding:10px 15px;border-radius:30px;border:1px solid var(--border);background:#101620;font-size:12px;font-weight:800;color:#9da8b8;}
+.chip.active{background:var(--green);border-color:var(--green);color:#031;}
+.banner{position:relative;overflow:hidden;padding:24px;border-radius:20px;margin-bottom:30px;border:1px solid rgba(255,255,255,.1);background:radial-gradient(circle at 85% 20%,rgba(57,237,130,.2),transparent 40%),linear-gradient(135deg,#131b28,#0a0f18);}
+.banner .lbl{color:var(--green);font-size:10px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;}
+.banner h4{font-size:22px;margin-bottom:8px;}.banner p{color:var(--muted);font-size:12px;line-height:1.6;max-width:280px;}
+.banner .art{position:absolute;right:14px;bottom:8px;font-size:56px;opacity:.85;}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.card{position:relative;overflow:hidden;padding:14px;border-radius:16px;border:1px solid var(--border);background:var(--card);}
+.c-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.c-icon{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-size:20px;background:linear-gradient(135deg,#283442,#151c26);flex:0 0 46px;}
+.i-blue{background:linear-gradient(135deg,#3158a4,#17284e);}.i-orange{background:linear-gradient(135deg,#8b5425,#3c2310);}.i-purple{background:linear-gradient(135deg,#694598,#2d1d48);}.i-red{background:linear-gradient(135deg,#913542,#3d171e);}.i-cyan{background:linear-gradient(135deg,#287681,#15383e);}.i-pink{background:linear-gradient(135deg,#a23d72,#40192d);}.i-green{background:linear-gradient(135deg,#1a7a4c,#0d3d28);}
+.c-name{font-size:13px;font-weight:800;line-height:1.2;}.c-ver{color:var(--green);font-size:9px;margin-top:2px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:110px;}
+.c-desc{color:#8793a4;font-size:10px;line-height:1.5;min-height:30px;margin-bottom:8px;}
+.c-badge{position:absolute;top:10px;right:10px;padding:3px 6px;border-radius:6px;background:rgba(57,237,130,.12);border:1px solid rgba(57,237,130,.2);color:var(--green);font-size:7px;font-weight:900;}
+.c-dl{display:flex;align-items:center;justify-content:center;gap:5px;width:100%;padding:9px;border-radius:9px;background:linear-gradient(135deg,var(--green),var(--green2));color:#031;font-size:11px;font-weight:900;}
+.user-rating{display:flex;gap:3px;margin:6px 0 8px;justify-content:center;}.user-rating span{font-size:14px;cursor:pointer;opacity:.4;}.user-rating span.active,.user-rating span:hover{opacity:1;color:#ffc857;}
+.no-res{text-align:center;padding:50px 20px;color:var(--muted);}
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.cat-tile{padding:20px 14px;border-radius:18px;border:1px solid var(--border);background:var(--card);text-align:center;}
+.cat-tile .ci{font-size:30px;margin-bottom:10px;}.cat-tile .cn{font-size:13px;font-weight:800;}.cat-tile .cc{color:var(--muted);font-size:10px;margin-top:2px;}
+.tut-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:16px;}
+.tut-card h3{font-size:16px;margin-bottom:10px;color:var(--green);}.tut-card ol{padding-left:18px;color:var(--muted);font-size:13px;line-height:1.7;}.tut-card li{margin-bottom:6px;}
+.legal-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:16px;font-size:13px;line-height:1.7;color:var(--muted);}
+.legal-box h3{color:var(--text);margin-bottom:10px;font-size:16px;}
+.contact-links{display:flex;flex-direction:column;gap:10px;margin-top:12px;}
+.contact-links a{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid var(--border);font-size:13px;font-weight:700;color:#dbe2ec;}
+.contact-links a:active{background:rgba(57,237,130,.15);}
+.navbar{position:fixed;left:0;right:0;bottom:0;z-index:50;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(8,10,16,.85);backdrop-filter:blur(18px);border-top:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-around;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 10px;border-radius:12px;color:#6c7889;}
+.nav-item .ni{font-size:19px;}.nav-item .nl{font-size:9px;font-weight:800;}.nav-item.active{color:var(--green);}
+.chat-btn{position:fixed;bottom:90px;right:18px;z-index:999;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#39ed82,#14c463);color:#031;font-size:24px;display:grid;place-items:center;box-shadow:0 8px 25px rgba(57,237,130,.45);border:none;cursor:pointer;}
+.chat-btn:active{transform:scale(.9);}
+.chat-panel{position:fixed;bottom:160px;right:18px;z-index:999;width:320px;max-width:calc(100vw - 36px);height:420px;background:#0f141f;border:1px solid rgba(255,255,255,.1);border-radius:20px;display:none;flex-direction:column;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.5);}
+.chat-panel.open{display:flex;}
+.chat-header{padding:14px 16px;background:rgba(57,237,130,.1);border-bottom:1px solid rgba(255,255,255,.1);font-weight:800;font-size:14px;display:flex;justify-content:space-between;align-items:center;}
+.chat-messages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
+.msg{max-width:85%;padding:10px 13px;border-radius:14px;font-size:13px;line-height:1.45;}
+.msg.bot{background:rgba(255,255,255,.07);align-self:flex-start;border-bottom-left-radius:4px;}
+.msg.user{background:linear-gradient(135deg,#39ed82,#14c463);color:#031;align-self:flex-end;border-bottom-right-radius:4px;}
+.chat-input{display:flex;gap:8px;padding:12px;border-top:1px solid rgba(255,255,255,.1);}
+.chat-input input{flex:1;height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:#fff;padding:0 14px;outline:none;font-size:13px;}
+.chat-input button{width:42px;height:42px;border-radius:12px;background:#39ed82;color:#031;font-size:18px;display:grid;place-items:center;border:none;cursor:pointer;}
+@media(min-width:600px){.grid,.cat-grid{grid-template-columns:repeat(3,1fr);}}
+.popup-overlay{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;padding:20px;}
+.popup-overlay.show{display:flex;}
+.popup-box{background:#121a27;border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:22px;max-width:360px;width:100%;max-height:80vh;overflow-y:auto;}
+.popup-box h3{font-size:17px;margin-bottom:12px;color:var(--green);}
+.popup-box p,.popup-box li{color:var(--muted);font-size:13px;line-height:1.65;}
+.popup-box ol{padding-left:18px;margin:8px 0 14px;}
+.popup-box .popup-btns{display:flex;gap:10px;margin-top:16px;}
+.popup-box .popup-btns button{flex:1;padding:12px;border-radius:12px;font-weight:800;font-size:13px;}
+.btn-ok{background:linear-gradient(135deg,var(--green),var(--green2));color:#031;}
+.btn-cancel{background:rgba(255,255,255,.08);color:#fff;border:1px solid var(--border);}
+</style>
+</head>
+<body>
+<div class="intro" id="intro"><div style="text-align:center"><div class="intro-logo"><div class="intro-icon">A</div>APK<span>Hub</span></div></div><div class="intro-tag">DISCOVER • DOWNLOAD • ENJOY</div></div>
+<div class="shell">
+  <div class="topbar"><div class="brand"><div class="brand-icon">A</div>APK<span>Hub</span></div><button class="icon-btn" onclick="go('about')">⋯</button></div>
+  <div class="pages">
+    <section class="page active" id="page-home">
+      <div class="badge"><span class="dot"></span>Fresh apps & games added regularly</div>
+      <h1 class="hero-title">Your World of<br><span class="grad">Android Apps</span></h1>
+      <p class="hero-sub">Premium apps, mods & games – clean, fast & free.</p>
+      <div class="search"><span class="ic">⌕</span><input id="homeSearch" placeholder="Search apps, games..." oninput="onHomeSearch(this.value)"></div>
+      <div class="stats-row"><div class="stat"><b id="appCount">0</b><span>APPS</span></div><div class="stat"><b>24/7</b><span>ONLINE</span></div><div class="stat"><b>FREE</b><span>DOWNLOAD</span></div></div>
+      <div class="sec-head"><h3>🔥 Trending Now</h3><a onclick="go('apps')">View all →</a></div>
+      <div class="trend-scroll" id="trendScroll"></div>
+      <div class="banner"><div class="lbl">Featured</div><h4>Need Help?</h4><p>Open the chatbot or check Tutorials for download & link skip guide.</p><div class="art">🤖</div></div>
+      <div class="sec-head"><h3>Browse Categories</h3><a onclick="go('categories')">See all →</a></div>
+      <div class="chip-row"><button class="chip" onclick="openCategory('games')">🎮 Games</button><button class="chip" onclick="openCategory('video')">🎬 Video</button><button class="chip" onclick="openCategory('tools')">🛠 Tools</button><button class="chip" onclick="openCategory('music')">🎵 Music</button></div>
+    </section>
+    <section class="page" id="page-apps">
+      <h1 class="hero-title" style="font-size:26px;margin-top:10px;">All Apps</h1>
+      <div class="search"><span class="ic">⌕</span><input id="appsSearch" placeholder="Search..." oninput="renderApps()"></div>
+      <div class="chip-row" id="appsChips"></div>
+      <div class="grid" id="appsGrid"></div>
+      <div class="no-res" id="appsNoRes" style="display:none">😕 Nothing found</div>
+    </section>
+    <section class="page" id="page-games">
+      <h1 class="hero-title" style="font-size:26px;margin-top:10px;">🎮 Games</h1>
+      <p class="hero-sub">Modded games ready to play.</p>
+      <div class="grid" id="gamesGrid"></div>
+    </section>
+    <section class="page" id="page-categories">
+      <h1 class="hero-title" style="font-size:26px;margin-top:10px;">Categories</h1>
+      <div class="cat-grid" id="catGrid"></div>
+    </section>
+    <section class="page" id="page-tutorials">
+      <h1 class="hero-title" style="font-size:26px;margin-top:10px;">Tutorials</h1>
+      <div class="tut-card"><h3>🔗 Link Skip Tutorial (Vplink Ads)</h3><ol><li>Download button dabao → Vplink page khulegi.</li><li>“Skip” / “Continue” button dhoondo.</li><li>Agar timer hai to 5-10 second wait karo.</li><li>Ad ke beech mein “X” ya “Close” pe click karo.</li><li>Final page pe “Download” / “Get Link” dabao.</li><li>MediaFire se APK download ho jayega.</li></ol></div>
+      <div class="tut-card"><h3>📥 APK Download & Install Tutorial</h3><ol><li>App card pe “↓ Download” dabao.</li><li>Vplink se guzro (upar wala tutorial).</li><li>APK file download ho jayegi.</li><li>Settings → Security → “Install unknown apps” ON karo.</li><li>Downloaded APK pe tap karke Install karo.</li></ol></div>
+      <div class="legal-box"><h3>📄 About</h3>APK Hub is a free platform to discover premium Android apps, mods and games. We only provide short links.</div>
+      <div class="legal-box"><h3>⚠️ Disclaimer</h3>All apps/games are for educational purposes. Use at your own risk. Always scan APKs before installing.</div>
+      <div class="legal-box"><h3>🔒 Privacy Policy</h3>We do not collect personal data. Ratings are stored only in your browser.</div>
+      <div class="legal-box"><h3>📞 Contact / Social Links</h3>
+        <div class="contact-links">
+          <a href="https://discord.gg/PrmCsM5TX" target="_blank">💬 Discord Server</a>
+          <a href="https://discordapp.com/users/1211342202442223628" target="_blank">👤 Discord Profile</a>
+          <a href="https://www.instagram.com/naseemgame.r?igsh=ZndkenpxYmk2cWpi" target="_blank">📸 Instagram</a>
+          <a href="https://www.tiktok.com/@naseemgame_r?_t=ZS-8yeXB5jhgcU&_r=1" target="_blank">🎵 TikTok</a>
+          <a href="https://www.facebook.com/share/14JGkxjxDQF/" target="_blank">📘 Facebook</a>
+          <a href="https://youtube.com/@naseemgame.r?si=ssVhhnYGD4Wratu1" target="_blank">▶️ YouTube</a>
+        </div>
+      </div>
+    </section>
+    <section class="page" id="page-about">
+      <div class="about-logo" style="display:flex;align-items:center;gap:10px;font-size:22px;font-weight:900;margin:20px 0 14px;"><div class="brand-icon">A</div>APK<span style="color:var(--green)">Hub</span></div>
+      <p style="color:var(--muted);font-size:13px;line-height:1.7;margin-bottom:22px;">Clean & fast APK discovery platform.</p>
+      <div class="contact-links">
+        <a href="https://discord.gg/PrmCsM5TX" target="_blank">💬 Discord Server</a>
+        <a href="https://discordapp.com/users/1211342202442223628" target="_blank">👤 Discord Profile</a>
+        <a href="https://www.instagram.com/naseemgame.r?igsh=ZndkenpxYmk2cWpi" target="_blank">📸 Instagram</a>
+        <a href="https://www.tiktok.com/@naseemgame_r?_t=ZS-8yeXB5jhgcU&_r=1" target="_blank">🎵 TikTok</a>
+        <a href="https://www.facebook.com/share/14JGkxjxDQF/" target="_blank">📘 Facebook</a>
+        <a href="https://youtube.com/@naseemgame.r?si=ssVhhnYGD4Wratu1" target="_blank">▶️ YouTube</a>
+      </div>
+      <div style="margin-top:30px;color:#4e5967;font-size:11px;">© 2026 APK Hub</div>
+    </section>
+  </div>
+  <nav class="navbar">
+    <button class="nav-item active" data-tab="home" onclick="go('home')"><span class="ni">🏠</span><span class="nl">Home</span></button>
+    <button class="nav-item" data-tab="apps" onclick="go('apps')"><span class="ni">📱</span><span class="nl">Apps</span></button>
+    <button class="nav-item" data-tab="games" onclick="go('games')"><span class="ni">🎮</span><span class="nl">Games</span></button>
+    <button class="nav-item" data-tab="tutorials" onclick="go('tutorials')"><span class="ni">📖</span><span class="nl">Tutorials</span></button>
+    <button class="nav-item" data-tab="categories" onclick="go('categories')"><span class="ni">🏷️</span><span class="nl">Categories</span></button>
+  </nav>
+</div>
+<div class="popup-overlay" id="welcomePopup">
+  <div class="popup-box">
+    <h3>⚠️ Disclaimer & Tutorial</h3>
+    <p><b>Disclaimer:</b> All apps/games are for educational purposes only. Use at your own risk. Always scan APKs before installing.</p>
+    <p style="margin-top:10px;"><b>How to download:</b></p>
+    <ol>
+      <li>App card pe Download dabao</li>
+      <li>Vplink ads skip karo</li>
+      <li>MediaFire se APK download karo</li>
+      <li>Unknown sources allow karke install karo</li>
+    </ol>
+    <p>Full guide Tutorials page pe hai.</p>
+    <div class="popup-btns"><button class="btn-ok" onclick="closeWelcome()">Samajh gaya ✓</button></div>
+  </div>
+</div>
+<div class="popup-overlay" id="dlPopup">
+  <div class="popup-box">
+    <h3>📥 Download Notice</h3>
+    <p>Download se pehle yaad rakho:</p>
+    <ol>
+      <li>Vplink page pe ads skip karo</li>
+      <li>APK ko antivirus se scan karo</li>
+      <li>Apne risk pe install karo</li>
+    </ol>
+    <div class="popup-btns">
+      <button class="btn-cancel" onclick="closeDl()">Cancel</button>
+      <button class="btn-ok" id="dlConfirmBtn">Continue ↓</button>
+    </div>
+  </div>
+</div>
+<button class="chat-btn" onclick="toggleChat()">🤖</button>
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-header"><span>APK Hub Helper</span><button onclick="toggleChat()" style="font-size:18px;background:none;border:none;color:white;cursor:pointer;">✕</button></div>
+  <div class="chat-messages" id="chatMessages"><div class="msg bot">Assalam o Alaikum! Main aapki madad ke liye yahan hoon.<br>Poochho: download kaise karein, link skip, install etc.</div></div>
+  <div class="chat-input"><input id="chatInput" placeholder="Type your question..." onkeydown="if(event.key==='Enter')sendChat()"><button onclick="sendChat()">➤</button></div>
+</div>
+<script>
+const WORKER_URL="https://apkhub-chat.zorayzahmed49.workers.dev";
+const APPS=[
+{name:"InShot",ver:"v2.222.1548 (Pro)",desc:"Video & photo editor",cat:"video",icon:"✂️",cls:"i-orange",badge:"PRO",link:"https://vplink.in/PSWRyG"},
+{name:"Koloro",ver:"v6.2.8 (VIP)",desc:"Photo editor",cat:"photo",icon:"🎨",cls:"i-pink",badge:"VIP",link:"https://vplink.in/69FQ"},
+{name:"MeloShort",ver:"2.42.00 (Premium)",desc:"Short dramas",cat:"video",icon:"📱",cls:"i-purple",badge:"PREMIUM",link:"https://vplink.in/d9BXu"},
+{name:"LOKTV",ver:"v1.1.0 (VIP)",desc:"LOKTV streaming",cat:"video",icon:"📺",cls:"i-cyan",badge:"VIP",link:"https://vplink.in/iWGd2"},
+{name:"MOVIES HUB",ver:"v2.1.5d (Premium)",desc:"Movies hub",cat:"video",icon:"🎬",cls:"i-red",badge:"PREMIUM",link:"https://vplink.in/TJMVw"},
+{name:"Prime Video",ver:"v3.0.465.755 MOD",desc:"Prime Video mod",cat:"video",icon:"📺",cls:"i-blue",badge:"MOD",link:"https://vplink.in/1HLBB"},
+{name:"Hulu",ver:"v6.11.0.63 (Premium)",desc:"Hulu mod",cat:"video",icon:"📡",cls:"i-green",badge:"PREMIUM",link:"https://vplink.in/4rsj"},
+{name:"Adobe Scan",ver:"v26.08.01 (Premium)",desc:"PDF scanner",cat:"tools",icon:"📄",cls:"i-red",badge:"PREMIUM",link:"https://vplink.in/4bGBk"},
+{name:"Minecraft",ver:"v1.26.10.4 mod",desc:"Minecraft mod",cat:"games",icon:"⛏️",cls:"i-green",badge:"MOD",link:"https://vplink.in/SjKaer"},
+{name:"FC Mobile",ver:"v26.2.02 mod",desc:"FC Mobile",cat:"games",icon:"⚽",cls:"i-blue",badge:"MOD",link:"https://vplink.in/y5Wg"},
+{name:"Zoom",ver:"v6.3.1.26498 (Premium)",desc:"Video meetings",cat:"tools",icon:"📹",cls:"i-blue",badge:"PREMIUM",link:"https://vplink.in/rcmnt"},
+{name:"MobiPDF",ver:"v11.16.270612",desc:"PDF reader",cat:"tools",icon:"📑",cls:"i-orange",badge:"PREMIUM",link:"https://vplink.in/369tD"},
+{name:"Wattpad",ver:"v11.36.0 (Premium)",desc:"Stories",cat:"tools",icon:"📖",cls:"i-orange",badge:"PREMIUM",link:"https://vplink.in/Wdgbn9"},
+{name:"Subway Surfers",ver:"v3.68.5 mod",desc:"Runner game",cat:"games",icon:"🏃",cls:"i-orange",badge:"MOD",link:"https://vplink.in/u646AU"},
+{name:"Shadow Fight 2",ver:"v2.45.0 mod",desc:"Fighting game",cat:"games",icon:"⚔️",cls:"i-red",badge:"MOD",link:"https://vplink.in/7iSbbG"},
+{name:"Grammarly",ver:"v2.63.47989",desc:"Writing tool",cat:"tools",icon:"✍️",cls:"i-green",badge:"PREMIUM",link:"https://vplink.in/kFbhei"},
+{name:"YT Music",ver:"v9.34.52 MOD",desc:"YouTube Music",cat:"music",icon:"🎵",cls:"i-red",badge:"MOD",link:"https://vplink.in/BmiKt0"},
+{name:"YouTube Vanced",ver:"v21.35.442 MOD",desc:"YouTube no ads",cat:"video",icon:"▶️",cls:"i-red",badge:"MOD",link:"https://vplink.in/i47gt6"},
+{name:"Weezer",ver:"v3.7.2 (Premium)",desc:"Music player",cat:"music",icon:"🎧",cls:"i-purple",badge:"PREMIUM",link:"https://vplink.in/9cDJIw"},
+{name:"TeraBox",ver:"v4.24.6 MOD",desc:"Cloud storage",cat:"tools",icon:"📦",cls:"i-cyan",badge:"MOD",link:"https://vplink.in/3g2zW3"},
+{name:"Storage Space",ver:"v29.1.5 (Premium)",desc:"Storage cleaner",cat:"tools",icon:"🧹",cls:"i-cyan",badge:"PREMIUM",link:"https://vplink.in/B58G"},
+{name:"Picsart",ver:"v30.6.5 (Premium)",desc:"Photo editor",cat:"photo",icon:"🖼️",cls:"i-pink",badge:"PREMIUM",link:"https://vplink.in/PNW8T"},
+{name:"Perplexity",ver:"v2.82.1 (Premium)",desc:"AI search",cat:"tools",icon:"🤖",cls:"i-blue",badge:"PREMIUM",link:"https://vplink.in/8kab"},
+{name:"Netflix",ver:"v9.81.0 MOD",desc:"Netflix mod",cat:"video",icon:"🎬",cls:"i-red",badge:"MOD",link:"https://vplink.in/OTtjlG"},
+{name:"Mock Locations",ver:"v1.37.2 (Premium)",desc:"Fake GPS",cat:"tools",icon:"📍",cls:"i-orange",badge:"PREMIUM",link:"https://vplink.in/4sc5T"},
+{name:"GG Mouse Pro 2",ver:"v2.3.21 (Premium)",desc:"Auto clicker",cat:"tools",icon:"🖱️",cls:"i-purple",badge:"PREMIUM",link:"https://vplink.in/jYKj"},
+{name:"GC Auto Clicker",ver:"v2.2.78 (Premium)",desc:"Auto clicker",cat:"tools",icon:"👆",cls:"i-cyan",badge:"PREMIUM",link:"https://vplink.in/wL3jw"},
+{name:"eSound",ver:"v4.16.29 (Premium)",desc:"Music app",cat:"music",icon:"🎶",cls:"i-purple",badge:"PREMIUM",link:"https://vplink.in/Vqt2"},
+{name:"ChatGPT",ver:"v1.2025.329 (Premium)",desc:"ChatGPT app",cat:"tools",icon:"💬",cls:"i-green",badge:"PREMIUM",link:"https://vplink.in/WkRJK"},
+{name:"CapCut",ver:"v19.6.1 MOD",desc:"Video editor",cat:"video",icon:"🎥",cls:"i-pink",badge:"MOD",link:"https://vplink.in/w6IiPR"},
+{name:"Alight Motion",ver:"v5.0.279 (Premium)",desc:"Motion graphics",cat:"video",icon:"✨",cls:"i-purple",badge:"PREMIUM",link:"https://vplink.in/bmOYo5"},
+{name:"CapCut",ver:"v18.6.0 (Pro)",desc:"CapCut Pro",cat:"video",icon:"✂️",cls:"i-pink",badge:"PRO",link:"https://vplink.in/OHDG60"},
+{name:"YouTube Premium",ver:"v21.33.326 (Premium)",desc:"YouTube Premium",cat:"video",icon:"▶️",cls:"i-red",badge:"PREMIUM",link:"https://vplink.in/u2i0s"},
+{name:"VPN India",ver:"v1.162 (Pro)",desc:"VPN app",cat:"tools",icon:"🔒",cls:"i-blue",badge:"PRO",link:"https://vplink.in/LUxT"},
+{name:"TikTok Platinum",ver:"v46.7.5 (MOD)",desc:"TikTok mod",cat:"social",icon:"🎵",cls:"i-pink",badge:"MOD",link:"https://vplink.in/eWam"},
+{name:"Red Dead Redemption",ver:"v1.58.63226194 MOD",desc:"RDR mod",cat:"games",icon:"🤠",cls:"i-orange",badge:"MOD",link:"https://vplink.in/M4S6ty"},
+{name:"microG Services",ver:"v0.3.1.4.240913",desc:"microG services",cat:"tools",icon:"⚙️",cls:"i-cyan",badge:"",link:"https://vplink.in/xdaUMm"},
+{name:"WEBTOON",ver:"v3.9.11 (Premium)",desc:"Webtoons reader",cat:"tools",icon:"📖",cls:"i-green",badge:"PREMIUM",link:"https://vplink.in/dvy7"}
+];
+const CATS=[{key:"games",icon:"🎮",name:"Games"},{key:"video",icon:"🎬",name:"Video"},{key:"tools",icon:"🛠",name:"Tools"},{key:"music",icon:"🎵",name:"Music"},{key:"photo",icon:"📷",name:"Photo"},{key:"social",icon:"📱",name:"Social"}];
+function getRating(name){return parseInt(localStorage.getItem('rate_'+name)||0);}
+function setRating(name,stars){localStorage.setItem('rate_'+name,stars);renderApps();renderGames();}
+function ratingHTML(name){const r=getRating(name);let h='<div class="user-rating">';for(let i=1;i<=5;i++)h+=`<span class="${i<=r?'active':''}" onclick="setRating('${name}',${i})">★</span>`;return h+'</div>';}
+function cardHTML(a){return `<div class="card">${a.badge?`<span class="c-badge">${a.badge}</span>`:''}<div class="c-top"><div class="c-icon ${a.cls}">${a.icon}</div><div><div class="c-name">${a.name}</div><div class="c-ver">${a.ver}</div></div></div><div class="c-desc">${a.desc}</div>${ratingHTML(a.name)}<button class="c-dl" onclick="downloadApp('${a.link}')">↓ Download</button></div>`;}
+document.getElementById('trendScroll').innerHTML=APPS.slice(0,6).map(a=>`<div class="trend-card"><div class="ti ${a.cls}">${a.icon}</div><div class="tn">${a.name}</div><div class="tr">${a.ver.split(' ')[0]}</div></div>`).join('');
+function onHomeSearch(v){if(v.trim()){go('apps');document.getElementById('appsSearch').value=v;renderApps();}}
+let appsFilter='all';
+const appChipDefs=[['all','✨ All'],['games','🎮 Games'],['video','🎬 Video'],['tools','🛠 Tools'],['music','🎵 Music'],['photo','📷 Photo'],['social','📱 Social']];
+document.getElementById('appsChips').innerHTML=appChipDefs.map(([k,l])=>`<button class="chip ${k==='all'?'active':''}" data-k="${k}" onclick="setAppsFilter('${k}')">${l}</button>`).join('');
+function setAppsFilter(k){appsFilter=k;document.querySelectorAll('#appsChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.k===k));renderApps();}
+function renderApps(){const q=(document.getElementById('appsSearch').value||'').toLowerCase();const list=APPS.filter(a=>(appsFilter==='all'||a.cat===appsFilter)&&(a.name.toLowerCase().includes(q)||a.ver.toLowerCase().includes(q)));document.getElementById('appsGrid').innerHTML=list.map(cardHTML).join('');document.getElementById('appsNoRes').style.display=list.length?'none':'block';}
+renderApps();
+function renderGames(){const list=APPS.filter(a=>a.cat==='games');document.getElementById('gamesGrid').innerHTML=list.length?list.map(cardHTML).join(''):`<div class="no-res">No games found</div>`;}
+renderGames();
+document.getElementById('catGrid').innerHTML=CATS.map(c=>{const count=APPS.filter(a=>a.cat===c.key).length;return `<div class="cat-tile" onclick="openCategory('${c.key}')"><div class="ci">${c.icon}</div><div class="cn">${c.name}</div><div class="cc">${count} items</div></div>`;}).join('');
+function openCategory(key){go('apps');setAppsFilter(key);}
+function go(tab){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+tab).classList.add('active');document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.tab===tab));}
+document.getElementById('appCount').textContent=APPS.length+'+';
+function toggleChat(){document.getElementById('chatPanel').classList.toggle('open');}
+function addMsg(text,type){const div=document.createElement('div');div.className='msg '+type;div.innerHTML=text;document.getElementById('chatMessages').appendChild(div);document.getElementById('chatMessages').scrollTop=99999;}
+async function sendChat(){const input=document.getElementById('chatInput');const text=input.value.trim();if(!text)return;addMsg(text,'user');input.value='';addMsg("Thinking...",'bot');try{const res=await fetch(WORKER_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:text})});const data=await res.json();const messages=document.getElementById('chatMessages');messages.removeChild(messages.lastChild);if(data.reply)addMsg(data.reply,'bot');else addMsg("Error: "+(data.error||"Problem"),'bot');}catch(err){const messages=document.getElementById('chatMessages');if(messages.lastChild)messages.removeChild(messages.lastChild);addMsg("Network error. Internet check karo.",'bot');}}
+let pendingDl=null;
+function downloadApp(link){
+  pendingDl=link;
+  document.getElementById('dlPopup').classList.add('show');
+  document.getElementById('dlConfirmBtn').onclick=function(){
+    document.getElementById('dlPopup').classList.remove('show');
+    if(pendingDl) window.open(pendingDl,'_blank');
+    pendingDl=null;
+  };
+}
+function closeDl(){document.getElementById('dlPopup').classList.remove('show');pendingDl=null;}
+function closeWelcome(){
+  document.getElementById('welcomePopup').classList.remove('show');
+  localStorage.setItem('apkhub_welcome_done','1');
+}
+window.addEventListener('load',()=>{
+  setTimeout(()=>document.getElementById('intro').classList.add('hide'),2200);
+  if(!localStorage.getItem('apkhub_welcome_done')){
+    setTimeout(()=>document.getElementById('welcomePopup').classList.add('show'),2600);
+  }
+});
+</script>
+</body>
+</html>
